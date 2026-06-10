@@ -1,0 +1,55 @@
+name: Sync, Build, and Deploy Strudel
+
+on:
+  schedule:
+    - cron: '0 0 * * 0' # Runs automatically every Sunday at midnight to grab updates
+  workflow_dispatch: # Allows you to manually trigger the build whenever you want
+
+# Set permissions required for modern GitHub Actions deployment
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Prevent overlapping deployments if triggered multiple times
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      # Step 1: Force clone the absolute latest main branch of Strudel directly from Codeberg
+      - name: Clone Strudel from Codeberg
+        run: |
+          git clone --depth 1 https://codeberg.org/uzu/strudel.git .
+          
+      # Step 2: Set up Node.js environment
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-size: 18
+
+      # Step 3: Install pnpm (Strudel's required package manager)
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 8
+
+      # Step 4: Install packages and compile production assets
+      - name: Install and Build Strudel
+        run: |
+          pnpm i
+          pnpm run build
+          
+      # Step 5: Upload the compiled 'dist' or build folder directly to Pages infrastructure
+      - name: Upload Pages Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './packages/repl/dist' # Target folder inside Strudel monorepo
+
+      # Step 6: Deploy the uploaded files live
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
