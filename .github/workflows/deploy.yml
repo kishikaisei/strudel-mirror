@@ -19,14 +19,13 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout your hosting repository
+      - name: Checkout destination repository
         uses: actions/checkout@v4
 
-      - name: Clone Strudel source repository
+      - name: Clone Codeberg repository
         run: |
-          git clone https://codeberg.org/uzu/strudel.git strudel-src
-          cp -r strudel-src/* .
-          rm -rf strudel-src
+          git clone https://codeberg.org external-repo
+          mv external-repo/* external-repo/.* . 2>/dev/null || true
 
       - name: Install pnpm
         uses: pnpm/action-setup@v3
