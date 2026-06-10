@@ -24,7 +24,7 @@ jobs:
 
       - name: Clone Codeberg repository
         run: |
-          git clone https://codeberg.org external-repo
+          git clone https://codeberg.org/uzu/strudel.git external-repo
           mv external-repo/* external-repo/.* . 2>/dev/null || true
 
       - name: Install pnpm
@@ -41,13 +41,13 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
-      - name: Build project
-        run: pnpm run build
+      - name: Build REPL Application
+        run: pnpm --filter @strudel/repl run build
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './website/dist'
+          path: './packages/repl/dist'
 
   deploy:
     environment:
