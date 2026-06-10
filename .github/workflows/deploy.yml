@@ -25,12 +25,12 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20 # Upgraded to Node 20 for better modern pnpm support
+          node-version: 20
 
       - name: Setup pnpm
-        uses: pnpm/action-setup@v4 # Upgraded from v3 to v4 to support newer pnpm versions
+        uses: pnpm/action-setup@v4
         with:
-          version: 9 # Forces pnpm v9+ which natively supports the "catalog:" protocol
+          version: 9
 
       - name: Install and Build Strudel
         run: |
