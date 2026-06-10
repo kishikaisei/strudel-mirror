@@ -20,7 +20,7 @@ jobs:
     steps:
       - name: Clone Strudel from Codeberg
         run: |
-          git clone --depth 1 https://codeberg.org/uzu/strudel.git .
+          git clone --depth 1 https://codeberg.org .
           
       - name: Setup Node.js
         uses: actions/setup-node@v4
@@ -40,7 +40,7 @@ jobs:
       - name: Upload Pages Artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './website/dist'
+          path: './packages/repl/dist'
 
       - name: Deploy to GitHub Pages
         id: deployment
